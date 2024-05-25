@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -33,7 +32,8 @@ public class Config {
         httpSecurity.csrf().disable().authorizeHttpRequests()
         .requestMatchers("/register/buyer", "/register/seller").permitAll()
         .requestMatchers("/register/property", "/getPropertiesOfTheSeller", 
-        "/delete/property/*", "/update/property", "/getPropertiesOfTheSellerWithInterestedBuyers").hasAnyAuthority("SELLER")
+        "/delete/property/*", "/update/property", "/getPropertiesOfTheSellerWithInterestedBuyers",
+        "/getInterestedBuyers").hasAnyAuthority("SELLER")
         .requestMatchers("/allProperty").hasAnyAuthority("BUYER", "SELLER")
         .requestMatchers("/interested/property/**", "/disinterested/property/*").hasAnyAuthority("BUYER")
         .requestMatchers("/property/**").hasAnyAuthority("SELLLER", "BUYER")

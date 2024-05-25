@@ -1,6 +1,9 @@
 package com.example.Rentify.Services;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -100,6 +103,14 @@ public class PropertyService {
         else
             throw new SellerNotMatchingException();
         return true;
+    }
+
+    public Set<Buyer> getInterestedBuyers()
+    {
+        List<Property> properties = getPropertiesOfSellerWithInterestedBuyers();
+        Set<Buyer> interestedBuyers = new HashSet<>();
+        properties.forEach(property->interestedBuyers.addAll(property.getInterestedBuyers()));
+        return interestedBuyers;
     }
 
     public Property updateProperty(PropertyModel property)

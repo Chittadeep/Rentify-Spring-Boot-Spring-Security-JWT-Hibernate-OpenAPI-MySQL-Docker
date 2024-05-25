@@ -1,6 +1,7 @@
 package com.example.Rentify.Controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.service.annotation.PatchExchange;
 
+import com.example.Rentify.Entities.Buyer;
 import com.example.Rentify.Entities.Property;
 import com.example.Rentify.Model.PropertyModel;
 import com.example.Rentify.Services.PropertyService;
@@ -80,5 +82,9 @@ public class PropertyController {
         return new ResponseEntity<Property>(propertyService.updateProperty(propertyModel), HttpStatus.OK);
     }
 
-
+    @GetMapping("/getInterestedBuyers")
+    public ResponseEntity<Set<Buyer>> getInterestedBuyers()
+    {
+        return new ResponseEntity<Set<Buyer>>(propertyService.getInterestedBuyers(), HttpStatus.OK);
+    }
 }
