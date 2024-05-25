@@ -3,6 +3,7 @@ package com.example.Rentify.Entities;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Prop;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -35,12 +36,20 @@ public class Property {
     @NotNull(message = "Property cannot be created without colleges")
     private short colleges; 
     
-    
-    @JsonIgnore
     @ManyToMany(mappedBy = "interestedProperties", cascade = CascadeType.ALL)
     private List<Buyer> interestedBuyers;
 
+    @JsonIgnore
     @NotNull(message = "Property cannot be created without seller")
     @ManyToOne
     private Seller seller;
+
+    @Override
+    public boolean equals(Object ob)
+    {
+        if(ob==this) return true;
+        Property p = (Property) ob;
+        if(p.id==this.id) return true;
+        return false;
+    }
 }

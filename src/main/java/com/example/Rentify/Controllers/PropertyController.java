@@ -14,10 +14,14 @@ import com.example.Rentify.Model.PropertyModel;
 import com.example.Rentify.Services.PropertyService;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -51,4 +55,30 @@ public class PropertyController {
     {
         return new ResponseEntity<PropertyModel>(propertyService.disinterestedBuyer(id), HttpStatus.OK);
     }
+
+    @GetMapping("/getPropertiesOfTheSeller")
+    public ResponseEntity<List<PropertyModel>> getAllPropertiesOfTheSeller()
+    {
+        return new ResponseEntity<List<PropertyModel>>(propertyService.getPropertiesOfSeller(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getPropertiesOfTheSellerWithInterestedBuyers")
+    public ResponseEntity<List<Property>> getAllPropertiesOfTheSellerWithInterestedBuyers()
+    {
+        return new ResponseEntity<List<Property>>(propertyService.getPropertiesOfSellerWithInterestedBuyers(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/property/{id}")
+    public ResponseEntity<Boolean> deleteProperty(@PathVariable int id)
+    {
+        return new ResponseEntity<Boolean>(propertyService.deleteProperty(id), HttpStatus.OK);
+    }
+    
+    @PutMapping("/update/property")
+    public ResponseEntity<Property> updateProperty(@RequestBody PropertyModel propertyModel)
+    {
+        return new ResponseEntity<Property>(propertyService.updateProperty(propertyModel), HttpStatus.OK);
+    }
+
+
 }

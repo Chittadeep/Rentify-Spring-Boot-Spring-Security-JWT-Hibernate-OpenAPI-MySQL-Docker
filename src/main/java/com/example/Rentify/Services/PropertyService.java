@@ -42,7 +42,6 @@ public class PropertyService {
         return new PropertyModel(propertyRepository.findById(id).orElseThrow(()-> new PropertyNotFoundException()));
     }
 
-    
     private Property getPropertyEntity(int id)
     {
         return propertyRepository.findById(id).orElseThrow(()-> new PropertyNotFoundException());
@@ -53,25 +52,24 @@ public class PropertyService {
         return ((List<Property>) propertyRepository.findAll()).stream().map(PropertyModel::new).toList();
     }
 
-    public Property updateProperty(Property property)
+    public List<PropertyModel> getPropertiesOfSeller()
     {
-        Property propertyObj = getPropertyEntity(property.getId());
-        if(propertyObj.getSeller().getId()!=authorizeSeller().getId()) throw new SellerNotMatchingException();
-        propertyRepository.save(property);
-        return property;
+        return propertyRepository.getPropertyBySeller(authorizeSeller()).stream().map(PropertyModel::new).toList();
+    }
+
+    public List<Property> getPropertiesOfSellerWithInterestedBuyers()
+    {
+        return propertyRepository.getPropertyBySeller(authorizeSeller());
     }
 
     public PropertyModel interestedBuyer(int id)
     {
-        
-        System.out.println("Before start" + getPropertyEntity(id).getInterestedBuyers());
         Property property = getPropertyEntity(id);
         Buyer buyer = authorizeBuyer();
-        List<Buyer> interestedBuyer = property.getInterestedBuyers();
-        if(interestedBuyer.contains(buyer)) throw new BuyerWasAlreadyInterestedException();
-        interestedBuyer.add(buyer);
-        property.setInterestedBuyers(interestedBuyer);
-        propertyRepository.save(property);
+        List<Property> interestedProperties = buyer.getInterestedProperties();
+        if(interestedProperties.contains(property)) throw new BuyerWasAlreadyInterestedException();
+        interestedProperties.add(property);
+        buyer.setInterestedProperties(interestedProperties);
         buyerRepository.save(buyer);
         return new PropertyModel(property);
     }
@@ -79,14 +77,43 @@ public class PropertyService {
     public PropertyModel disinterestedBuyer(int id)
     {
         Property property = getPropertyEntity(id);
+        Buyer buyer = authorizeBuyer();
         List<Buyer> interestedBuyer = property.getInterestedBuyers();
         if(interestedBuyer.contains(authorizeBuyer())){
         interestedBuyer.remove(authorizeBuyer());
         }
         else throw new BuyerWasNotPreviouslyInterestedException();
         property.setInterestedBuyers(interestedBuyer);
+        List<Property> interestedProperties = buyer.getInterestedProperties();
+        interestedProperties.remove(property);
+        buyer.setInterestedProperties(interestedProperties);
+        buyerRepository.save(buyer);
         propertyRepository.save(property);
         return new PropertyModel(property);
+    }
+
+    public boolean deleteProperty(int id)
+    {
+        Property property = getPropertyEntity(id);
+        if(property.getSeller().equals(authorizeSeller()))
+            propertyRepository.delete(property);
+        else
+            throw new SellerNotMatchingException();
+        return true;
+    }
+
+    public Property updateProperty(PropertyModel property)
+    {
+        Property oldProperty = getPropertyEntity(property.getId());
+        if(!oldProperty.getSeller().equals(authorizeSeller())) throw new SellerNotMatchingException();
+        oldProperty.setArea(property.getArea());
+        oldProperty.setBathroom(property.getBathroom());
+        oldProperty.setColleges(property.getColleges());
+        oldProperty.setHospitals(property.getHospitals());
+        oldProperty.setNumberOfBedrooms(property.getNumberOfBedrooms());
+        oldProperty.setPlace(property.getPlace());
+        propertyRepository.save(oldProperty);
+        return oldProperty;
     }
 
     private Seller authorizeSeller()

@@ -30,11 +30,12 @@ public class Config {
 
      @Bean
         public SecurityFilterChain configure(HttpSecurity httpSecurity)throws Exception {
-        httpSecurity.csrf().disable().authorizeHttpRequests().requestMatchers("/register/buyer").permitAll()
-        .requestMatchers("/register/seller").permitAll()
-        .requestMatchers("/register/property").hasAnyAuthority("SELLER")
+        httpSecurity.csrf().disable().authorizeHttpRequests()
+        .requestMatchers("/register/buyer", "/register/seller").permitAll()
+        .requestMatchers("/register/property", "/getPropertiesOfTheSeller", 
+        "/delete/property/*", "/update/property", "/getPropertiesOfTheSellerWithInterestedBuyers").hasAnyAuthority("SELLER")
         .requestMatchers("/allProperty").hasAnyAuthority("BUYER", "SELLER")
-        .requestMatchers("/interested/property/**").hasAnyAuthority("BUYER")
+        .requestMatchers("/interested/property/**", "/disinterested/property/*").hasAnyAuthority("BUYER")
         .requestMatchers("/property/**").hasAnyAuthority("SELLLER", "BUYER")
         .anyRequest().authenticated().
         and().httpBasic();

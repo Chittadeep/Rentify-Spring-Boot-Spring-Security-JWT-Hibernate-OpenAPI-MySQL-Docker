@@ -3,8 +3,10 @@ package com.example.Rentify.Model;
 import com.example.Rentify.Entities.Property;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class PropertyModel {
     private int id;
     private String place;
@@ -27,6 +29,5 @@ public class PropertyModel {
         if(property.getInterestedBuyers()!=null)
             this.interestedBuyers = property.getInterestedBuyers().size();
         else this.interestedBuyers = 0;
-        //System.out.println(property.getInterestedBuyers());
     }
 }
