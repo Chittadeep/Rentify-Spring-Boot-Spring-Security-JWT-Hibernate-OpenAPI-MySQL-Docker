@@ -65,7 +65,7 @@ public class PropertyService {
         return propertyRepository.getPropertyBySeller(authorizeSeller());
     }
 
-    public PropertyModel interestedBuyer(int id)
+    public Seller interestedBuyer(int id)
     {
         Property property = getPropertyEntity(id);
         Buyer buyer = authorizeBuyer();
@@ -74,7 +74,7 @@ public class PropertyService {
         interestedProperties.add(property);
         buyer.setInterestedProperties(interestedProperties);
         buyerRepository.save(buyer);
-        return new PropertyModel(property);
+        return property.getSeller();
     }
 
     public PropertyModel disinterestedBuyer(int id)

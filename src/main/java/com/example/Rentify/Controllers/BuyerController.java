@@ -30,5 +30,4 @@ public class BuyerController {
         return new ResponseEntity<Buyer>(buyerService.getBuyer(id), HttpStatus.OK);
     }
     
-    
 }

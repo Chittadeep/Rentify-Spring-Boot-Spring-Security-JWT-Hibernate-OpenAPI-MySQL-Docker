@@ -12,6 +12,7 @@ import org.springframework.web.service.annotation.PatchExchange;
 
 import com.example.Rentify.Entities.Buyer;
 import com.example.Rentify.Entities.Property;
+import com.example.Rentify.Entities.Seller;
 import com.example.Rentify.Model.PropertyModel;
 import com.example.Rentify.Services.PropertyService;
 
@@ -47,9 +48,9 @@ public class PropertyController {
     }
     
     @PatchMapping("/interested/property/{id}")
-    public ResponseEntity<PropertyModel> interestedProperty(@PathVariable int id)
+    public ResponseEntity<Seller> interestedProperty(@PathVariable int id)
     {
-        return new ResponseEntity<PropertyModel>(propertyService.interestedBuyer(id), HttpStatus.OK);
+        return new ResponseEntity<Seller>(propertyService.interestedBuyer(id), HttpStatus.OK);
     }
 
     @PatchMapping("/disinterested/property/{id}")
@@ -87,4 +88,6 @@ public class PropertyController {
     {
         return new ResponseEntity<Set<Buyer>>(propertyService.getInterestedBuyers(), HttpStatus.OK);
     }
+
+    
 }
